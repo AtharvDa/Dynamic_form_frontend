@@ -5,10 +5,21 @@ const FormBuilder = () => {
   const [generatedField, setGeneratedField] = useState([]);
 
   const addField = (type) => {
-    setFields([
-      ...fields,
-      { type, label: "", placeHolder: "", required: false, options: [] },
-    ]);
+    let newField;
+    switch (type) {
+      case "text":
+      case "number":
+        newField = { type, label: "", placeHolder: "", required: false, options: [] };
+        break;
+      case "dropdown":
+      case "multiselect":
+      case "singleselect":
+        newField = { type, label: "", placeHolder: "", required: false, options: [""] };
+        break;
+      default:
+        newField = { type, label: "", placeHolder: "", required: false, options: [] };
+    }
+    setFields([...fields, newField]);
   };
 
   const removeField = (index) => {
@@ -65,6 +76,11 @@ const FormBuilder = () => {
     setFields([]);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(generatedField);
+  };
+
   return (
     <>
       <h1 style={{ textAlign: "center" }}>Dynamic Form Builder</h1>
@@ -74,7 +90,7 @@ const FormBuilder = () => {
             <div key={index}>
               {field.label && <label>{field.label}:</label>}
               {field.type === "text" && <input type="text" placeholder={field.placeHolder}/>}
-              {field.type === "number" && <input type="number" />}
+              {field.type === "number" && <input type="number" placeholder={field.placeHolder}/>}
               {field.type === "dropdown" && (
                 <select>
                   {field.options.map((option, optionIndex) => (
@@ -84,9 +100,48 @@ const FormBuilder = () => {
                   ))}
                 </select>
               )}
-             
+              {field.type === "multiselect" && (
+                <div>
+                  {field.options.map((option, optionIndex) => (
+                    <span key={optionIndex}>
+                      <input
+                        type="checkbox"
+                        id={`checkbox_${index}_${optionIndex}`}
+                        value={option}
+                        onChange={(e) =>
+                          handleOptionChange(
+                            index,
+                            optionIndex,
+                            e.target.checked
+                          )
+                        }
+                      />
+                      <label htmlFor={`checkbox_${index}_${optionIndex}`}>
+                        {option}
+                      </label>
+                    </span>
+                  ))}
+                </div>
+              )}
+              {field.type === "singleselect" && (
+                <div>
+                  {field.options.map((option, optionIndex) => (
+                    <div key={optionIndex}>
+                      <input
+                        type="radio"
+                        name={`radio_${index}`}
+                        value={option}
+                      />
+                      <label>{option}</label>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+
             </div>
           ))}
+          <button type="submit" onClick={handleSubmit}>Submit</button>
         </div>
         <div className="right">
           <div className="all-btns">
@@ -105,7 +160,16 @@ const FormBuilder = () => {
                 Dropdown
               </button>
             </div>
-            {/* Add buttons for other field types */}
+            <div>
+              <button type="button" onClick={() => addField("multiselect")}>
+                Multiselect
+              </button>
+            </div>
+            <div>
+              <button type="button" onClick={() => addField("singleselect")}>
+                Singleselect
+              </button>
+            </div>
           </div>
           <div>
             {fields.map((field, index) => (
@@ -136,7 +200,9 @@ const FormBuilder = () => {
                     onChange={() => handleRequiredChange(index)}
                   />
                 </label>
-                {field.type === "dropdown" ? (
+                {field.type === "dropdown" ||
+                field.type === "multiselect" ||
+                field.type === "singleselect" ? (
                   <>
                     Options:
                     {field.options.map((option, optionIndex) => (
@@ -172,6 +238,7 @@ const FormBuilder = () => {
             ))}
             <button onClick={addGeneratedField}>Add</button>
           </div>
+          
         </div>
       </div>
     </>
