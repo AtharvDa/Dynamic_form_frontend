@@ -2,3 +2,13 @@
     display: flex;
     flex-direction: column;
 }
+
+.input-style{
+    padding: 8px;
+    margin: 5px;
+}
+
+.btn-label > div > label{
+    font-weight: 500;
+    margin-top: 5px;
+}

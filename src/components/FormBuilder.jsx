@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./FormBuilder.css"
 
 const FormBuilder = () => {
   const [fields, setFields] = useState([]);
@@ -171,12 +172,14 @@ const FormBuilder = () => {
               </button>
             </div>
           </div>
-          <div>
+          <div className="btn-label">
             {fields.map((field, index) => (
               <div key={index}>
                 <label>
                   Label:
+                  <br/>
                   <input
+                  className="input-style"
                     type="text"
                     value={field.label}
                     onChange={(e) => handleLabelChange(index, e.target.value)}
@@ -184,8 +187,10 @@ const FormBuilder = () => {
                 </label>
                 <label>
                   Placeholder:
+                  <br/>
                   <input
                     type="text"
+                    className="input-style"
                     value={field.placeHolder}
                     onChange={(e) =>
                       handlePlaceholderChange(index, e.target.value)
@@ -193,12 +198,15 @@ const FormBuilder = () => {
                   />
                 </label>
                 <label>
-                  Is it mandatory?:
+                  Required:
+                  
                   <input
                     type="checkbox"
+                    className="input-style"
                     checked={field.required}
                     onChange={() => handleRequiredChange(index)}
                   />
+                  <br />
                 </label>
                 {field.type === "dropdown" ||
                 field.type === "multiselect" ||
@@ -207,8 +215,10 @@ const FormBuilder = () => {
                     Options:
                     {field.options.map((option, optionIndex) => (
                       <div key={optionIndex}>
+                        <label htmlFor="">{optionIndex+1}</label>
                         <input
                           type="text"
+                          className="input-style"
                           value={option}
                           onChange={(e) =>
                             handleOptionChange(
